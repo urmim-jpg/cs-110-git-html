@@ -1,14 +1,747 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<titles>CS 110 Demo Page </titles>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The BF16 Revolution - CS110 Final Project</title>
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --text-main: #8f93a2;
+            --text-heading: #e2e4ed;
+            --sign-color: #ff5370;
+            --exp-color: #ffcb6b;
+            --man-color: #c3e88d;
+            --box-bg: #1e2132;
+            --box-border: #292d3e;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout-container {
+            display: flex;
+            width: 100%;
+            max-width: 1800px;
+            height: 100vh;
+        }
+
+        /* Left Column: The Report */
+        .report-column {
+            flex: 1;
+            padding: 4rem 8%;
+            overflow-y: auto;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #b0b6c9;
+            scroll-behavior: smooth;
+        }
+
+        .report-column h1 {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text-heading);
+            font-size: 3.5rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        .report-subtitle {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #6c738c;
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            font-weight: 600;
+        }
+
+        .report-column h2 {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text-heading);
+            font-size: 2rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--box-border);
+            padding-bottom: 0.75rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .report-column p {
+            margin-bottom: 1.5rem;
+        }
+
+        .report-column strong {
+            color: var(--text-heading);
+        }
+
+        .report-column ul {
+            margin-bottom: 2rem;
+        }
+
+        .report-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        /* Interactive Triggers in text */
+        .interactive-trigger {
+            background: #2a2e45;
+            border: 1px solid #3d4366;
+            padding: 2px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: "IBM Plex Mono", "Courier New", Consolas, monospace;
+            font-size: 0.95em;
+            color: var(--text-heading);
+            transition: transform 0.05s, box-shadow 0.05s, background 0.2s;
+            box-shadow: 0 3px 0 #151724;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .interactive-trigger:hover {
+            background: #343956;
+        }
+
+        .interactive-trigger:active {
+            transform: translateY(3px);
+            box-shadow: 0 0 0 #151724;
+        }
+
+        /* Right Column: The Explorer */
+        .explorer-column {
+            width: 650px;
+            min-width: 650px;
+            background: #151724;
+            border-left: 1px solid var(--box-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+            overflow-y: auto;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .top-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        input[type="text"] {
+            background: #0d0f17;
+            border: 2px solid var(--box-border);
+            color: var(--text-heading);
+            padding: 1rem 1.5rem;
+            font-size: 1.75rem;
+            border-radius: 8px;
+            font-family: "IBM Plex Mono", "Courier New", Consolas, monospace;
+            width: 100%;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #5b668f;
+            box-shadow: 0 0 0 3px rgba(91, 102, 143, 0.2);
+        }
+
+        .explainer {
+            background: #1e2132;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #5b668f;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            font-family: Georgia, "Times New Roman", serif;
+            color: #b0b6c9;
+            font-style: italic;
+        }
+
+        .format-container {
+            margin-bottom: 2rem;
+        }
+
+        .format-container h2 {
+            color: var(--text-heading);
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1.15rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .labels {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .label-sign {
+            width: 16px;
+            color: var(--sign-color);
+            text-align: center;
+        }
+
+        .label-exp {
+            width: 142px;
+            color: var(--exp-color);
+            text-align: center;
+        }
+
+        .label-man {
+            flex: 1;
+            color: var(--man-color);
+            text-align: center;
+        }
+
+        .bit-row {
+            display: flex;
+            gap: 2px;
+            flex-wrap: nowrap;
+        }
+
+        .bit-box {
+            flex: 0 0 16px;
+            width: 16px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #11131a;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #3b4259;
+            font-family: "IBM Plex Mono", "Courier New", Consolas, monospace;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #1a1d27;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .bit-box:hover {
+            transform: scale(1.15);
+            z-index: 2;
+            position: relative;
+            filter: brightness(1.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* satisfying flip effect */
+        .bit-box.on {
+            transform: scale(1.05);
+        }
+
+        .bit-box.on:hover {
+            transform: scale(1.15);
+        }
+
+        .bit-box.sign {
+            border-bottom: 2px solid #552733;
+        }
+
+        .bit-box.exp {
+            border-bottom: 2px solid #524626;
+        }
+
+        .bit-box.man {
+            border-bottom: 2px solid #33422a;
+        }
+
+        .bit-box.sign.on {
+            background: #3d1c23;
+            color: var(--sign-color);
+            border-bottom-color: var(--sign-color);
+            text-shadow: 0 0 8px rgba(255, 83, 112, 0.5);
+            border-color: #552733;
+        }
+
+        .bit-box.exp.on {
+            background: #3a321d;
+            color: var(--exp-color);
+            border-bottom-color: var(--exp-color);
+            text-shadow: 0 0 8px rgba(255, 203, 107, 0.5);
+            border-color: #524626;
+        }
+
+        .bit-box.man.on {
+            background: #232e1c;
+            color: var(--man-color);
+            border-bottom-color: var(--man-color);
+            text-shadow: 0 0 8px rgba(195, 232, 141, 0.5);
+            border-color: #33422a;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: var(--box-bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--box-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c738c;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .value {
+            font-family: "IBM Plex Mono", "Courier New", Consolas, monospace;
+            font-size: 1rem;
+            color: var(--text-heading);
+            word-break: break-all;
+        }
+
+        .diff-card {
+            border-color: #3b4259;
+            background: #1c202d;
+        }
+
+        @media (max-width: 1200px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+
+            .layout-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .explorer-column {
+                width: 100%;
+                min-width: 0;
+                border-left: none;
+                border-top: 1px solid var(--box-border);
+                position: relative;
+                height: auto;
+                padding: 2rem;
+                box-shadow: none;
+                align-items: center;
+            }
+
+            .displays-wrapper {
+                width: 100%;
+                max-width: 600px;
+            }
+
+            .stats {
+                max-width: 600px;
+                width: 100%;
+            }
+
+            .top-panel {
+                max-width: 600px;
+                width: 100%;
+            }
+
+            .report-column {
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
-<body>
-
-<h1>Welcome to our first Git + Github activity! </h1>
-<p>Git and github are essential tools for any computational professional, even those only tangentially working with software.
-We are using it right now to create a basic HTML file to explore and play with that information representation format.</p>
 
 <body>
-    
-<html>
+
+    <div class="layout-container">
+
+        <!-- Scrolling Article / Report -->
+        <div class="report-column">
+            <h1>The BF16 Revolution</h1>
+            <div class="report-subtitle">How Chopping Numbers in Half Made Modern AI Possible</div>
+
+            <h2>1. The Problem with the AI Boom</h2>
+            <p>Over the last decade, Artificial Intelligence has shifted from small experimental networks to massive
+                Large Language Models (LLMs) with hundreds of billions of parameters. Every single parameter (a
+                "weight") is a number. Traditionally, computers store decimal numbers using the IEEE 754
+                <strong>Float32</strong> standard. It's incredibly precise, but it comes at a huge cost: every number
+                takes 32 bits (4 bytes) of memory.
+            </p>
+            <p>When you have a trillion parameters, moving them in and out of GPU memory becomes the primary bottleneck.
+                It wasn't the processor speed holding AI back; it was the memory bandwidth. Researchers realized they
+                needed to shrink the numbers. But how?</p>
+
+            <h2>2. Range vs. Precision: The Tradeoff</h2>
+            <p>The obvious solution was to use an existing smaller format: <strong>Float16 (FP16)</strong>. But FP16
+                introduced a catastrophic problem during AI training: the gradients (the numbers used to update the
+                model) would sometimes grow exponentially or shrink to zero. This is known as "vanishing or exploding
+                gradients."</p>
+            <p>To understand why, we have to look at how floating-point numbers are built. They consist of three parts:
+            </p>
+            <ul>
+                <li><strong style="color: var(--sign-color)">The Sign Bit</strong>: Determines if it's positive or
+                    negative.</li>
+                <li><strong style="color: var(--exp-color)">The Exponent</strong>: Determines the sheer size of the
+                    number (the range).</li>
+                <li><strong style="color: var(--man-color)">The Mantissa (Fraction)</strong>: Determines the
+                    fine-grained detail (the precision).</li>
+            </ul>
+            <p>FP16 shrinks the exponent from 8 bits to 5 bits. This drastically limits how big or small a number can
+                get. If an AI gradient exceeded the maximum value FP16 could hold (about 65,504), it would turn into
+                <code>Infinity</code> and break the entire model. AI didn't need extreme precision, but it desperately
+                needed <em>massive range</em>.
+            </p>
+
+            <h2>3. Investigating a New Format: BF16</h2>
+            <p>Enter <strong>BFloat16 (Brain Floating Point)</strong>, developed by Google specifically for machine
+                learning. The genius of BF16 is its simplicity. Instead of redesigning the exponent, they just took
+                standard Float32 and chopped off the bottom 16 bits.</p>
+            <p>Look at the visualizer on the right. If you click this number: <button class="interactive-trigger"
+                    data-val="1000000000">1,000,000,000</button>, you'll notice the exponent bits (yellow) are identical
+                in both formats. BF16 retains the exact same 8-bit exponent as Float32, meaning it can represent numbers
+                just as massive. It sacrifices the mantissa (green), dropping from 23 bits to just 7. This means less
+                detail, but in AI, absolute precision is mostly noise anyway. The tradeoff was a massive success: memory
+                bandwidth doubled, and models continued to scale without exploding.</p>
+
+            <h2>4. The Philosophy of Number Design: Why So Many Formats?</h2>
+            <p>You might be wondering: if <strong>BF16</strong> is so great, why do we still have other formats like
+                Float32, Float16, Float64, or even newer ones like FP8? The answer lies in the minds of hardware
+                designers. When engineers create a number format, they are constrained by physics and cost. Every bit
+                takes up physical space on a silicon chip and requires energy to move. Designers must balance three
+                conflicting goals: <strong>range</strong> (how big the numbers can get), <strong>precision</strong> (how
+                detailed they are), and <strong>efficiency</strong> (how fast and cheap they are to compute).</p>
+            <p>Historically, graphics and scientific computing needed <em>exactness</em>, so Float32 and Float64 were
+                born. But AI is fundamentally different: it operates on probabilities and fuzzy logic. AI hardware
+                designers realized they could "cheat" by throwing away precision to double their processing speed and
+                memory capacity. <strong>This is why AI uses BF16</strong>, and why you should too for modern deep
+                learning: it perfectly aligns with the mathematical reality of neural networks. By preserving the
+                exponent, BF16 maintains the massive range needed to prevent models from collapsing during training,
+                while its tiny 7-bit mantissa is just detailed enough for the noisy calculations of gradient descent. It
+                is a masterclass in designing a mathematical tool specifically for its environment.</p>
+
+            <h2>5. Interactive Guide: Messing with Memory</h2>
+            <p>This tool was built using JavaScript's <code>ArrayBuffer</code> and <code>DataView</code> APIs to extract
+                real bits directly from memory, no string simulation here. We implemented standard IEEE 754 nearest-even
+                rounding in software to convert the F32 representation into BF16.</p>
+            <p>But you can do more than just type. <strong>Try clicking any individual bit box on the right.</strong>
+            </p>
+            <p>By manually flipping the bits, the tool calculates the mathematical value backwards in real-time. Notice
+                how flipping an <span style="color:var(--exp-color); font-weight:bold;">exponent bit</span> drastically
+                changes the size of the number, while flipping a <span
+                    style="color:var(--man-color); font-weight:bold;">mantissa bit</span> only changes the fine details.
+            </p>
+            <p>Try these specific examples by clicking the buttons below:</p>
+            <ul>
+                <li><button class="interactive-trigger" data-val="0.000001">0.000001</button>: Notice how many mantissa
+                    bits turn into noise when trying to hold onto precision.</li>
+                <li><button class="interactive-trigger" data-val="3.14159265358979">3.14159265358979</button>: See how
+                    quickly Pi loses its decimal places when BF16 sacrifices the mantissa.</li>
+                <li><button class="interactive-trigger" data-val="99999999">99,999,999</button>: Big integers break
+                    down because floats prioritize range over exactness. BF16 is off by thousands!</li>
+                <li><button class="interactive-trigger" data-val="0.873">0.873</button>: Just a normal decimal, right?
+                    But since it's not a power of two, both formats have to chop it off and round.</li>
+            </ul>
+
+            <h2>6. Societal Impact</h2>
+            <p>It's easy to overlook data formats, but BF16 fundamentally shifted the computing ecosystem. Without the
+                ability to compress models by 50% without losing range, running models like ChatGPT would require double
+                the hardware, vastly increasing the cost and energy consumption of data centers. By rethinking how we
+                represent data, hardware engineers unlocked the era of generative AI.</p>
+
+            <h2>7. Why This Matters</h2>
+            <p>Floating-point formats are often treated as pure computer science abstractions, the kind of dry technical
+                details buried in systems textbooks. But down at the silicon level, these are raw design decisions made
+                by real engineers, decisions that dictate which technologies ultimately become economically viable.
+                Chopping a number format in half doesn't just save a little storage space; it changes the physical
+                layout of the chip and shifts the boundaries of what a computer can process.</p>
+            <p>BFloat16 is one of the quiet, underlying reasons large-scale AI became possible exactly when it did. When
+                you are training a neural network with billions of parameters across thousands of chips simultaneously,
+                memory bandwidth is everything. Cutting the memory footprint of every single weight in half isn't a
+                minor optimization; it's a structural earthquake. It meant engineers could suddenly train models twice
+                as large on their existing hardware infrastructure. Without this format, the sheer cost and energy
+                required to handle those parameters would have bottlenecked progress. Instead, it gave us the raw scale
+                needed to pull systems like ChatGPT out of research labs and turn them into massive consumer products.
+            </p>
+            <p>There is something deeply fascinating about the fact that a number format invented by researchers at
+                Google is now a universal industry standard. Today, BF16 is baked directly into the physical hardware of
+                chips made by NVIDIA, AMD, Apple, and Intel. When your phone's AI features instantly process a photo or
+                rewrite a text message, it is likely firing billions of calculations through transistors explicitly
+                wired for this exact format. It is a niche mathematical concept running inside devices used by hundreds
+                of millions of people who have absolutely no idea it exists, all because someone realized that
+                sometimes, being fast is more important than being exact.</p>
+
+            <h2>8. Reflection</h2>
+            <p>If I had to explain floating point to someone outside of CS, I’d say it’s basically scientific notation
+                hacked into a string of 1s and 0s. Instead of writing out a massive number with all its zeros, you just
+                say "1 times 10 to the 9th." A computer does the same thing in binary. It splits its memory into two
+                buckets: one for the actual digits (the mantissa) and one to track where the decimal point goes (the
+                exponent). BF16 is just the realization that for AI, the exact digits don't matter that much. You just
+                need the scale. So engineers took the standard 32-bit format and literally chopped the digit bucket in
+                half to save space, while keeping the exponent bucket exactly the same.</p>
+            <p>Reading the IEEE documentation was dry, but building this visualizer made it click. I remember writing
+                the JavaScript to hook into the <code>DataView</code> API, trying to pull raw bytes straight out of
+                memory. The moment it actually made sense was when I got the clickable bit boxes working. I clicked a
+                single yellow exponent bit and watched the output jump from 1 to 65,000 instantly. Then I clicked a
+                green mantissa bit and it just changed 65,000 to 65,012. Seeing that physical separation on the screen,
+                watching how throwing away 16 bits of mantissa barely affects the big picture but saves half your RAM,
+                turned an abstract systems concept into something obvious. I could physically see why AI doesn't need
+                exactness, just range.</p>
+            <p>This isn't just systems trivia. BF16 is a massive reason why generative AI blew up when it did. Training
+                a massive neural network requires holding billions of weights in memory across thousands of GPUs. If you
+                cut the size of every single weight in half, you double your hardware capacity overnight without
+                building a single new data center. It’s wild to think that a hyper-specific hardware decision, choosing
+                exactly how many bits to allocate for math precision, ended up dictating which tech companies survived
+                and what consumer products we actually got. Millions of people are using AI on their phones right now,
+                and underneath all of it, the silicon is quietly running billions of calculations in a chopped-in-half
+                number format that was just a research experiment a few years ago.</p>
+        </div>
+
+        <!-- Sticky Interactive Panel -->
+        <div class="explorer-column">
+            <div class="top-panel">
+                <input type="text" id="num-input" placeholder="Enter any number..." value="0">
+                <div class="explainer" id="explainer">
+                    Every time you type or flip a bit below, we push that directly into memory. The red box is the sign
+                    flag. The yellow boxes scale the number. The green boxes hold the actual details.
+                </div>
+            </div>
+
+            <div class="displays-wrapper">
+                <div class="format-container">
+                    <h2>Float32</h2>
+                    <div class="labels">
+                        <div class="label-sign">S</div>
+                        <div class="label-exp">Exponent (8)</div>
+                        <div class="label-man">Mantissa (23)</div>
+                    </div>
+                    <div class="bit-row" id="f32-bits"></div>
+                </div>
+
+                <div class="format-container">
+                    <h2>BF16</h2>
+                    <div class="labels">
+                        <div class="label-sign">S</div>
+                        <div class="label-exp">Exponent (8)</div>
+                        <div class="label-man">Mantissa (7)</div>
+                    </div>
+                    <div class="bit-row" id="bf16-bits"></div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Float32 Stored</div>
+                    <div class="value" id="f32-val">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">BF16 Stored</div>
+                    <div class="value" id="bf16-val">0</div>
+                </div>
+                <div class="stat-card diff-card">
+                    <div class="stat-label">Difference</div>
+                    <div class="value" id="diff-val">0</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // memory window setup
+        const buffer = new ArrayBuffer(4);
+        const view = new DataView(buffer);
+
+        // extracting the bits directly from memory
+        function extractBits(num) {
+            view.setFloat32(0, num);
+            const f32Bits = view.getUint32(0);
+            // standard rounding: add 0x7FFF plus the 16th bit, then shift over
+            const bf16Bits = (f32Bits + 0x7FFF + ((f32Bits >>> 16) & 1)) >>> 16;
+            return { f32Bits, bf16Bits };
+        }
+
+        // getting the real math values after rounding constraints
+        function getRealValues(num) {
+            view.setFloat32(0, num);
+            const f32Val = view.getFloat32(0);
+
+            const f32Bits = view.getUint32(0);
+            const bf16Bits = (f32Bits + 0x7FFF + ((f32Bits >>> 16) & 1)) >>> 16;
+
+            // pad back with zeroes to let JS read it as a float again
+            view.setUint32(0, bf16Bits << 16);
+            const bf16Val = view.getFloat32(0);
+
+            return { f32Val, bf16Val };
+        }
+
+        // creating boxes and binding click events to flip bits physically in memory
+        function createBoxes(containerId, count, isF32) {
+            const container = document.getElementById(containerId);
+            const boxes = [];
+            for (let i = 0; i < count; i++) {
+                const box = document.createElement('div');
+                box.className = 'bit-box';
+
+                if (i === 0) box.classList.add('sign');
+                else if (i <= 8) box.classList.add('exp');
+                else box.classList.add('man');
+
+                box.textContent = '0';
+
+                // INTERACTIVE BIT FLIPPING
+                box.addEventListener('click', () => {
+                    let num = parseFloat(document.getElementById('num-input').value.replace(/,/g, ''));
+                    if (isNaN(num)) num = 0;
+
+                    view.setFloat32(0, num);
+                    let f32Bits = view.getUint32(0);
+
+                    if (isF32) {
+                        // safely flip the exact bit in the 32 bit unsigned int
+                        const shift = 31 - i;
+                        f32Bits = (f32Bits ^ (1 << shift)) >>> 0;
+                        view.setUint32(0, f32Bits);
+                    } else {
+                        // reconstruct the bf16 bits, flip the requested bit, and pad it out
+                        const bf16Bits = (f32Bits + 0x7FFF + ((f32Bits >>> 16) & 1)) >>> 16;
+                        const shift = 15 - i;
+                        const newBf16 = (bf16Bits ^ (1 << shift)) >>> 0;
+                        view.setUint32(0, newBf16 << 16);
+                    }
+
+                    const newNum = view.getFloat32(0);
+                    document.getElementById('num-input').value = newNum;
+
+                    // let the user know what they just did
+                    const note = "You just physically flipped a bit in memory! We've recalculated the Float32 value backwards based on your changes.";
+                    updateDisplay(newNum, note);
+
+                    // subtle feedback
+                    const explorer = document.querySelector('.explorer-column');
+                    explorer.style.boxShadow = 'inset 0 0 20px rgba(195, 232, 141, 0.1)';
+                    setTimeout(() => { explorer.style.boxShadow = '-8px 0 32px rgba(0,0,0,0.3)'; }, 300);
+                });
+
+                container.appendChild(box);
+                boxes.push(box);
+            }
+            return boxes;
+        }
+
+        const f32Boxes = createBoxes('f32-bits', 32, true);
+        const bf16Boxes = createBoxes('bf16-bits', 16, false);
+
+        const defaultExplainer = "Every time you type or flip a bit below, we push that directly into memory. The red box is the sign flag. The yellow boxes scale the number. The green boxes hold the actual details.";
+
+        // Contextual notes for the interactive triggers
+        const presetNotes = {
+            "1000000000": "A billion! Notice how the exponent bits are identical in F32 and BF16, allowing BF16 to capture the massive range. But F32 holds exactness, while BF16 rounds it to 999,291,904.",
+            "0.000001": "Super tiny numbers push the limits of precision. Notice how many mantissa bits just turn into zeros or noise. The gap between Float32 and BF16 gets obvious here.",
+            "3.14159265358979": "Ah, Pi. Everybody's favorite irrational number. Float32 cuts it off, but look at BF16, it totally butchers it by throwing away 16 bits of fraction.",
+            "99999999": "Big integers start breaking down because floats prioritize range over exactness. Float32 is already slipping, but BF16 is off by thousands.",
+            "0.873": "Just a normal looking decimal, right? But since it's not a clean power of two, the binary representation goes on forever. Both formats have to chop it off and round."
+        };
+
+        // core display update logic
+        function updateDisplay(valStr, explicitNote = null) {
+            let numStr = String(valStr).replace(/,/g, '');
+            let num = parseFloat(numStr);
+            if (isNaN(num)) num = 0;
+
+            const { f32Bits, bf16Bits } = extractBits(num);
+            const { f32Val, bf16Val } = getRealValues(num);
+
+            // flip f32 UI
+            for (let i = 0; i < 32; i++) {
+                const bit = (f32Bits >>> (31 - i)) & 1;
+                const box = f32Boxes[i];
+                if (bit) {
+                    box.classList.add('on');
+                    box.textContent = '1';
+                } else {
+                    box.classList.remove('on');
+                    box.textContent = '0';
+                }
+            }
+
+            // flip bf16 UI
+            for (let i = 0; i < 16; i++) {
+                const bit = (bf16Bits >>> (15 - i)) & 1;
+                const box = bf16Boxes[i];
+                if (bit) {
+                    box.classList.add('on');
+                    box.textContent = '1';
+                } else {
+                    box.classList.remove('on');
+                    box.textContent = '0';
+                }
+            }
+
+            // output numbers
+            document.getElementById('f32-val').textContent = f32Val;
+            document.getElementById('bf16-val').textContent = bf16Val;
+            document.getElementById('diff-val').textContent = (f32Val - bf16Val);
+
+            // update text
+            const explainer = document.getElementById('explainer');
+            if (explicitNote) {
+                explainer.textContent = explicitNote;
+            } else {
+                explainer.textContent = defaultExplainer;
+            }
+        }
+
+        // listen to manual typing
+        document.getElementById('num-input').addEventListener('input', (e) => {
+            updateDisplay(e.target.value);
+        });
+
+        // hook up all the buttons inside the report text
+        document.querySelectorAll('.interactive-trigger').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const valStr = e.target.getAttribute('data-val');
+                document.getElementById('num-input').value = valStr;
+                updateDisplay(valStr, presetNotes[valStr]);
+
+                // nice visual flash so they know the panel updated
+                const explorer = document.querySelector('.explorer-column');
+                explorer.style.boxShadow = 'inset 0 0 40px rgba(91, 102, 143, 0.2)';
+                setTimeout(() => { explorer.style.boxShadow = '-8px 0 32px rgba(0,0,0,0.3)'; }, 400);
+            });
+        });
+
+        // kick off
+        updateDisplay("0");
+    </script>
+</body>
+
+</html>
